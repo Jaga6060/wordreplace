@@ -4,7 +4,16 @@
 # https://aka.ms/yaml
 
 trigger:
-- main
+  branches:
+    include:
+    - refs/heads/main
+  batch: True
+
+variables:
+- name: BuildParameters.solution
+  value: '**\*.sln'
+- name: BuildConfiguration
+  value: Release
 
 stages:
 - stage: Build
@@ -13,9 +22,16 @@ stages:
     pool:
       vmImage: windows-latest
     steps:
-      - task: DotNetCoreCLI@2
+      - task: VSBuild@1
+        displayName: Build solution
         inputs:
-          command: 'build'
+          solution: $(BuildParameters.solution)
+          msbuildArgs: /p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactstagingdirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"
+          platform: $(BuildPlatform)
+          configuration: $(BuildConfiguration)
+      #- task: DotNetCoreCLI@2
+      #  inputs:
+       #   command: 'build'
       - task: PublishBuildArtifacts@1
         inputs:
           PathtoPublish: '$(Build.ArtifactStagingDirectory)'
@@ -25,6 +41,7 @@ stages:
 - stage: Deploy
   jobs:
   - job: Deploy-app
+    dependsOn: Build-application
     pool:
       vmImage: windows-latest
     steps:
