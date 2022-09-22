@@ -41,7 +41,6 @@ stages:
 - stage: Deploy
   jobs:
   - job: Deploy_app
-    dependsOn: Build_application
     pool:
       vmImage: windows-latest
     steps:
