@@ -10,10 +10,10 @@ trigger:
   batch: True
 
 variables:
-- name: BuildParameters.solution
-  value: '**\*.sln'
-- name: BuildConfiguration
-  value: Release
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+
 
 stages:
 - stage: Build
@@ -22,10 +22,16 @@ stages:
     pool:
       vmImage: windows-latest
     steps:
-      - task: DotNetCoreCLI@2
+      - task: NuGetToolInstaller@1
+      - task: NuGetCommand@2
         inputs:
-          command: 'build'
-          projects: '**\*.csproj'
+          restoreSolution: '$(solution)'
+      - task: VSBuild@1
+        inputs:
+          solution: '$(solution)'
+          msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
+          platform: '$(buildPlatform)'
+          configuration: '$(buildConfiguration)'
       - task: PublishBuildArtifacts@1
         inputs:
           PathtoPublish: '$(Build.ArtifactStagingDirectory)'
