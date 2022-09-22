@@ -18,7 +18,7 @@ variables:
 stages:
 - stage: Build
   jobs:
-  - job: Build-application
+  - job: Build_application
     pool:
       vmImage: windows-latest
     steps:
@@ -40,8 +40,8 @@ stages:
           
 - stage: Deploy
   jobs:
-  - job: Deploy-app
-    dependsOn: Build-application
+  - job: Deploy_app
+    dependsOn: Build_application
     pool:
       vmImage: windows-latest
     steps:
