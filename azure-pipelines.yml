@@ -76,7 +76,7 @@ stages:
       inputs:
         folderPath: '$(System.ArtifactsDirectory)/**/*.zip'
         fileType: 'json'
-        targetFiles: 'Tokens.json'
+        targetFiles: '$(System.ArtifactsDirectory)/**/*.Tokens.json'
     - task: AzureRmWebAppDeployment@4
       inputs:
         ConnectionType: 'AzureRM'
