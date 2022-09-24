@@ -13,7 +13,17 @@ variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
-
+  oracleInput: "Oracle"
+  googleInput: "Google"
+  microsoftInput: "Microsoft"
+  amazonInput: "Amazon"
+  deloitteInput: "Deloitte"
+  oracleOutput: "Oracle©"
+  googleOutput: "Google©"
+  microsoftOutput: "Microsoft©"
+  amazonOutput: "Amazon©"
+  deloitteOutput: "Deloitte©"
+  
 
 stages:
 - stage: Build
@@ -44,12 +54,29 @@ stages:
     pool:
       vmImage: windows-latest
     steps:
+    # - task: AzureResourceManagerTemplateDeployment@3
+    #   inputs:
+    #     deploymentScope: 'Resource Group'
+    #     azureResourceManagerConnection: 'azure connection'
+    #     subscriptionId: 'd5794522-822c-4e71-9fd1-01f73c5529d1'
+    #     action: 'Create Or Update Resource Group'
+    #     resourceGroupName: 'assignment'
+    #     location: 'Central US'
+    #     templateLocation: 'Linked artifact'
+    #     csmFile: 'appservice.json'
+    #     csmParametersFile: 'parameters.json'
+    #     deploymentMode: 'Incremental'
     - task: DownloadBuildArtifacts@1
       inputs:
         buildType: 'current'
         downloadType: 'specific'
         artifactName: 'drop'
         downloadPath: '$(System.ArtifactsDirectory)'
+    - task: FileTransform@1
+      inputs:
+        folderPath: '$(System.ArtifactsDirectory)/**/*.zip'
+        fileType: 'json'
+        targetFiles: '$(System.ArtifactsDirectory)/**/*.Tokens.json'
     - task: AzureRmWebAppDeployment@4
       inputs:
         ConnectionType: 'AzureRM'
