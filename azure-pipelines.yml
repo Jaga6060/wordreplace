@@ -44,16 +44,28 @@ stages:
     pool:
       vmImage: windows-latest
     steps:
+    - task: AzureResourceManagerTemplateDeployment@3
+      inputs:
+        deploymentScope: 'Resource Group'
+        azureResourceManagerConnection: 'azure connection'
+        subscriptionId: 'd5794522-822c-4e71-9fd1-01f73c5529d1'
+        action: 'Create Or Update Resource Group'
+        resourceGroupName: 'assignment'
+        location: 'Central US'
+        templateLocation: 'Linked artifact'
+        csmFile: 'appservice.json'
+        csmParametersFile: 'parameters.json'
+        deploymentMode: 'Incremental'
     - task: DownloadBuildArtifacts@1
       inputs:
         buildType: 'current'
         downloadType: 'specific'
         artifactName: 'drop'
         downloadPath: '$(System.ArtifactsDirectory)'
-    - task: AzureRmWebAppDeployment@4
-      inputs:
-        ConnectionType: 'AzureRM'
-        azureSubscription: 'azure connection'
-        appType: 'webApp'
-        WebAppName: 'wordreplace1'
-        package: '$(System.ArtifactsDirectory)/drop/*.zip'
+   # - task: AzureRmWebAppDeployment@4
+    #  inputs:
+     #   ConnectionType: 'AzureRM'
+      #  azureSubscription: 'azure connection'
+       # appType: 'webApp'
+       # WebAppName: 'wordreplace1'
+       # package: '$(System.ArtifactsDirectory)/drop/*.zip'
