@@ -79,7 +79,7 @@ stages:
         downloadPath: '$(System.ArtifactsDirectory)'
     - task: FileTransform@1
       inputs:
-        folderPath: '$(System.ArtifactsDirectory)/**/*.zip'
+        folderPath: '$(System.ArtifactsDirectory)'
         fileType: 'json'
         targetFiles: '$(System.ArtifactsDirectory)/**/*.Tokens.json'
     - task: AzureRmWebAppDeployment@4
