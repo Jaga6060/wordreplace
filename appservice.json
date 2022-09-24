@@ -24,10 +24,7 @@
         "description": "The SKU of App Service Plan."
       }
     },
-      "metadata": {
-        "description": "The language stack of the app."
-      }
-    },
+  
     "repoUrl": {
       "type": "string",
       "defaultValue": "",
@@ -38,7 +35,7 @@
   },
   "variables": {
     "appServicePlanPortalName": "[concat('AppServicePlan-', parameters('webAppName'))]",
-    "gitRepoUrl": "https://dev.azure.com/sjswamy/myADtrn/_git/wordreplace"
+    "gitRepoUrl": "[parameters('repoUrl')]"
     }
   },
   "resources": [
