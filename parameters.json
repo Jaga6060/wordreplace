@@ -5,9 +5,11 @@
         "webAppName": {
             "value": "wordreplace"
         },
+        "language":{
+            "value": ".net"
+        },
         "sku": {
             "value": "F1"
-        }
         },
         "repoUrl": {
             "value": "https://dev.azure.com/sjswamy/myADtrn/_git/wordreplace"

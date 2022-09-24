@@ -17,6 +17,19 @@
         "description": "Location for all resources."
       }
     },
+    "language": {
+      "type": "string",
+      "defaultValue": ".net",
+      "allowedValues": [
+        ".net",
+        "php",
+        "node",
+        "html"
+      ],
+      "metadata": {
+        "description": "The language stack of the app."
+      }
+    },
     "sku": {
       "type": "string",
       "defaultValue": "F1",
@@ -36,7 +49,6 @@
   "variables": {
     "appServicePlanPortalName": "[concat('AppServicePlan-', parameters('webAppName'))]",
     "gitRepoUrl": "[parameters('repoUrl')]"
-    }
   },
   "resources": [
     {
