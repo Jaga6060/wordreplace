@@ -76,5 +76,5 @@ stages:
         ConnectionType: 'AzureRM'
         azureSubscription: 'azure connection'
         appType: 'webApp'
-        WebAppName: 'wordreplace1'
+        WebAppName: 'wordreplace'
         package: '$(System.ArtifactsDirectory)/drop/*.zip'
