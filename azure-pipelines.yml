@@ -12,18 +12,7 @@ trigger:
 variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
-  buildConfiguration: 'Release'
-  oracleInput: "Oracle"
-  googleInput: "Google"
-  microsoftInput: "Microsoft"
-  amazonInput: "Amazon"
-  deloitteInput: "Deloitte"
-  oracleOutput: "Oracle©"
-  googleOutput: "Google©"
-  microsoftOutput: "Microsoft©"
-  amazonOutput: "Amazon©"
-  deloitteOutput: "Deloitte©"
-  
+  buildConfiguration: 'Release'  
 
 stages:
 - stage: Build
@@ -59,18 +48,18 @@ stages:
     pool:
       vmImage: windows-latest
     steps:
-    # - task: AzureResourceManagerTemplateDeployment@3
-    #   inputs:
-    #     deploymentScope: 'Resource Group'
-    #     azureResourceManagerConnection: 'azure connection'
-    #     subscriptionId: 'd5794522-822c-4e71-9fd1-01f73c5529d1'
-    #     action: 'Create Or Update Resource Group'
-    #     resourceGroupName: 'assignment'
-    #     location: 'Central US'
-    #     templateLocation: 'Linked artifact'
-    #     csmFile: 'appservice.json'
-    #     csmParametersFile: 'parameters.json'
-    #     deploymentMode: 'Incremental'
+    - task: AzureResourceManagerTemplateDeployment@3
+      inputs:
+        deploymentScope: 'Resource Group'
+        azureResourceManagerConnection: 'azure connection'
+        subscriptionId: 'd5794522-822c-4e71-9fd1-01f73c5529d1'
+        action: 'Create Or Update Resource Group'
+        resourceGroupName: 'assignment'
+        location: 'Central US'
+        templateLocation: 'Linked artifact'
+        csmFile: 'appservice.json'
+        csmParametersFile: 'parameters.json'
+        deploymentMode: 'Incremental'
     - task: DownloadBuildArtifacts@1
       inputs:
         buildType: 'current'
