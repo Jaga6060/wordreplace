@@ -6,8 +6,8 @@
 trigger:
   branches:
     include:
-    - refs/heads/main
-  batch: True
+    - refs/heads/main #triggers pipeline on changes to main branch
+  batch: True # queues the changes 
 
 variables:
   solution: '**/*.sln'
@@ -21,22 +21,17 @@ stages:
     pool:
       vmImage: windows-latest
     steps:
-      - task: NuGetToolInstaller@1
+      - task: NuGetToolInstaller@1 #Restores dependencies
       - task: NuGetCommand@2
         inputs:
           restoreSolution: '$(solution)'
-      - task: VSBuild@1
+      - task: VSBuild@1 #Builds application
         inputs:
           solution: '$(solution)'
           msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
           platform: '$(buildPlatform)'
           configuration: '$(buildConfiguration)'
-      - task: CopyFiles@2
-        inputs:
-          SourceFolder: '$(System.DefaultWorkingDirectory)'
-          Contents: '**/Tokens.json'
-          TargetFolder: '$(System.ArtifactsDirectory)'
-      - task: PublishBuildArtifacts@1
+      - task: PublishBuildArtifacts@1 #publish artifacts
         inputs:
           PathtoPublish: '$(Build.ArtifactStagingDirectory)'
           ArtifactName: 'drop'
@@ -48,7 +43,7 @@ stages:
     pool:
       vmImage: windows-latest
     steps:
-    - task: AzureResourceManagerTemplateDeployment@3
+    - task: AzureResourceManagerTemplateDeployment@3 #Create Webapp
       inputs:
         deploymentScope: 'Resource Group'
         azureResourceManagerConnection: 'azure connection'
@@ -60,13 +55,13 @@ stages:
         csmFile: 'appservice.json'
         csmParametersFile: 'parameters.json'
         deploymentMode: 'Incremental'
-    - task: DownloadBuildArtifacts@1
+    - task: DownloadBuildArtifacts@1 #Downloads Artifacts
       inputs:
         buildType: 'current'
         downloadType: 'specific'
         artifactName: 'drop'
         downloadPath: '$(System.ArtifactsDirectory)'
-    - task: AzureRmWebAppDeployment@4
+    - task: AzureRmWebAppDeployment@4 #Deploys Artifact to webapp
       inputs:
         ConnectionType: 'AzureRM'
         azureSubscription: 'azure connection'
