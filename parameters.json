@@ -3,7 +3,7 @@
     "contentVersion": "1.0.0.1",
     "parameters": {
         "webAppName": {
-            "value": "wordreplace"
+            "value": "wordreplace2"
         },
         "language":{
             "value": ".net"
