@@ -10,6 +10,9 @@
         },
         "sku": {
             "value": "F1"
+        },
+        "appInsightsLocation": {
+            "value": "Central US"
         }
     }
 }

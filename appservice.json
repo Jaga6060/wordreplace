@@ -36,6 +36,9 @@
       "metadata": {
         "description": "The SKU of App Service Plan."
       }
+    },
+    "appInsightsLocation": {
+      "type": "string"
     }
   },
   "variables": {
@@ -62,6 +65,19 @@
       "properties": {
         "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlanPortalName'))]"
       }
-    }
+    },
+    {
+      "type": "Microsoft.Insights/components",
+      "name": "[parameters('webAppName')]",
+      "apiVersion": "2014-04-01",
+      "location": "[parameters('appInsightsLocation')]",
+      "tags": {
+          "[concat('hidden-link:', resourceGroup().id, '/providers/Microsoft.Web/sites/', parameters('webAppName'))]": "Resource"
+      },
+      "properties": {
+          "applicationId": "[parameters('webAppName')]",
+          "Request_Source": "AzureTfsExtensionAzureProject"
+      }
+  }
   ]
 }

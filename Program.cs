@@ -6,6 +6,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+var config = new ConfigurationBuilder().AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+var Configuration = config.Build();
+// Add our Config object so it can be injected
+builder.Services.Configure<Dictionary<string, string>>(Configuration.GetSection("Tokens"));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

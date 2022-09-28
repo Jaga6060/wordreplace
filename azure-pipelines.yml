@@ -25,12 +25,20 @@ stages:
       - task: NuGetCommand@2
         inputs:
           restoreSolution: '$(solution)'
+      - task: SonarCloudPrepare@1
+        inputs:
+          SonarCloud: 'sonarcloud'
+          organization: 'sjswamy'
+          scannerMode: 'MSBuild'
+          projectKey: 'sjswamy_wordreplace'
+          projectName: 'wordreplace'
       - task: VSBuild@1 #Builds application
         inputs:
           solution: '$(solution)'
           msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
           platform: '$(buildPlatform)'
           configuration: '$(buildConfiguration)'
+      - task: SonarCloudAnalyze@1
       - task: PublishBuildArtifacts@1 #publish artifacts
         inputs:
           PathtoPublish: '$(Build.ArtifactStagingDirectory)'
@@ -39,7 +47,7 @@ stages:
           
 - stage: Deploy
   jobs:
-  - job: Deploy_app
+  - job: Create_web_app
     pool:
       vmImage: windows-latest
     steps:
@@ -55,6 +63,11 @@ stages:
         csmFile: 'appservice.json'
         csmParametersFile: 'parameters.json'
         deploymentMode: 'Incremental'
+  - job: Deploy_app
+    dependsOn: Create_web_app
+    pool:
+      vmImage: windows-latest
+    steps:
     - task: DownloadBuildArtifacts@1 #Downloads Artifacts
       inputs:
         buildType: 'current'

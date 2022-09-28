@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using System.Text.RegularExpressions;
+using Microsoft.Extensions.Options;
 
 namespace WordReplace.Controllers
 {
@@ -9,18 +8,19 @@ namespace WordReplace.Controllers
   public class WordReplaceController : ControllerBase
   {
     private readonly ILogger<WordReplaceController> _logger;
-    public WordReplaceController(ILogger<WordReplaceController> logger)
+    private readonly IOptions<Dictionary<string, string>> _conf;
+    public WordReplaceController(ILogger<WordReplaceController> logger, IOptions<Dictionary<string, string>> conf)
     {
       _logger = logger;
+      _conf = conf;
     }
     [HttpGet(Name = "GetWordReplaced")]
     public string Get(string inputString)
     {
       _logger.LogTrace("Execution Started");
-      StreamReader reader = new StreamReader("Tokens.json");
-      string jsonString = reader.ReadToEnd();
-      var tokens = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonString);
-      string output = tokens.Aggregate(inputString, (current, value) => current.Replace(value.Key, value.Value));
+      
+      string output = _conf.Value.Aggregate(inputString, (current, value) => current.Replace(value.Key, value.Value));
+
       _logger.LogTrace("Execution Completed");
       return output;
     }
